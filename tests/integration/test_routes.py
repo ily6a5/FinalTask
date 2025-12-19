@@ -2,6 +2,15 @@ import pytest
 import json
 
 
+@pytest.fixture
+def client(app):
+    return app.test_client()
+
+
+@pytest.fixture
+def runner(app):
+    return app.test_cli_runner()
+
 class TestUserRoutes:
 
     def test_get_users_list(self, client, mock_users):
