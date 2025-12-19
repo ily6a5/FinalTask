@@ -1,1 +1,163 @@
+{% extends "base.html" %}
 
+{% block content %}
+<div class="form-container">
+    <h1><i class="fas fa-user-plus"></i> Добавить нового пользователя</h1>
+
+    <div class="form-wrapper">
+        <form method="POST" action="{{ url_for('add_user') }}" class="user-form">
+            <div class="form-group">
+                <label for="name"><i class="fas fa-user"></i> Полное имя *</label>
+                <input type="text" id="name" name="name"
+                       value="{{ form_data.name if form_data else '' }}"
+                       required
+                       placeholder="Введите имя и фамилию">
+                <div class="form-hint">Обязательное поле</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email адрес *</label>
+                <input type="email" id="email" name="email"
+                       value="{{ form_data.email if form_data else '' }}"
+                       required
+                       placeholder="example@mail.com">
+                <div class="form-hint">Будет использоваться для входа</div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age"><i class="fas fa-birthday-cake"></i> Возраст *</label>
+                    <input type="number" id="age" name="age"
+                           value="{{ form_data.age if form_data else '' }}"
+                           min="1" max="150" required
+                           placeholder="25">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> Телефон</label>
+                    <input type="tel" id="phone" name="phone"
+                           value="{{ form_data.phone if form_data else '' }}"
+                           placeholder="+7 (999) 123-45-67">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="city"><i class="fas fa-city"></i> Город</label>
+                <input type="text" id="city" name="city"
+                       value="{{ form_data.city if form_data else '' }}"
+                       placeholder="Москва">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Сохранить пользователя
+                </button>
+                <a href="{{ url_for('users_list') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Отмена
+                </a>
+            </div>
+        </form>
+
+        <div class="form-info">
+            <h3><i class="fas fa-info-circle"></i> Информация</h3>
+            <ul>
+                <li>Поля отмеченные * обязательны для заполнения</li>
+                <li>Email должен быть уникальным</li>
+                <li>Возраст должен быть от 1 до 150 лет</li>
+                <li>После добавления пользователь появится в общем списке</li>
+                <li>Все данные сохраняются в файле users.json</li>
+            </ul>
+
+            <div class="api-info">
+                <h4><i class="fas fa-code"></i> API добавления</h4>
+                <p>Также можно добавить пользователя через API:</p>
+                <pre>POST /api/users/add
+Content-Type: application/json
+
+{
+  "name": "Имя Фамилия",
+  "email": "email@example.com",
+  "age": 25,
+  "phone": "+7 (999) 123-45-67",
+  "city": "Москва"
+}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Добавляем маску для телефона
+document.getElementById('phone').addEventListener('input', function(e) {
+    let value = this.value.replace(/\D/g, '');
+
+    if (value.length > 0) {
+        if (value[0] === '7' || value[0] === '8') {
+            value = value.substring(1);
+        }
+
+        let formatted = '+7';
+        if (value.length > 0) formatted += ' (' + value.substring(0, 3);
+        if (value.length > 3) formatted += ') ' + value.substring(3, 6);
+        if (value.length > 6) formatted += '-' + value.substring(6, 8);
+        if (value.length > 8) formatted += '-' + value.substring(8, 10);
+
+        this.value = formatted;
+    }
+});
+
+// Валидация формы
+document.querySelector('.user-form').addEventListener('submit', function(e) {
+    let isValid = true;
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const age = document.getElementById('age');
+
+    // Сбрасываем предыдущие ошибки
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+    document.querySelectorAll('.error-message').forEach(el => el.remove());
+
+    // Проверка имени
+    if (!name.value.trim()) {
+        showError(name, 'Введите имя пользователя');
+        isValid = false;
+    }
+
+    // Проверка email
+    if (!email.value.trim()) {
+        showError(email, 'Введите email адрес');
+        isValid = false;
+    } else if (!isValidEmail(email.value)) {
+        showError(email, 'Введите корректный email адрес');
+        isValid = false;
+    }
+
+    // Проверка возраста
+    const ageValue = parseInt(age.value);
+    if (isNaN(ageValue) || ageValue < 1 || ageValue > 150) {
+        showError(age, 'Введите возраст от 1 до 150 лет');
+        isValid = false;
+    }
+
+    if (!isValid) {
+        e.preventDefault();
+    }
+});
+
+function showError(input, message) {
+    input.classList.add('error');
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    errorDiv.style.color = '#e53e3e';
+    errorDiv.style.fontSize = '0.875rem';
+    errorDiv.style.marginTop = '0.25rem';
+    input.parentNode.appendChild(errorDiv);
+}
+
+function isValidEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+</script>
+{% endblock %}
