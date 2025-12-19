@@ -1,1 +1,133 @@
+{% extends "base.html" %}
 
+{% block content %}
+<div class="users-header">
+    <h1><i class="fas fa-users"></i> Список пользователей</h1>
+
+    <div class="users-stats">
+        <div class="stat-card">
+            <i class="fas fa-user-friends"></i>
+            <div class="stat-info">
+                <div class="stat-number">{{ total_users }}</div>
+                <div class="stat-label">Всего пользователей</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="users-actions">
+        <a href="{{ url_for('add_user') }}" class="btn btn-success">
+            <i class="fas fa-user-plus"></i> Добавить пользователя
+        </a>
+        <button onclick="exportUsers()" class="btn btn-secondary">
+            <i class="fas fa-download"></i> Экспорт JSON
+        </button>
+    </div>
+</div>
+
+{% if users %}
+<div class="user-grid">
+    {% for user in users %}
+    <div class="user-card">
+        <div class="user-avatar">
+            <i class="fas fa-user-circle"></i>
+            <span class="user-id">#{{ user.id }}</span>
+        </div>
+        <div class="user-info">
+            <h3>{{ user.name }}</h3>
+            <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+            <p><i class="fas fa-birthday-cake"></i> {{ user.age }} лет</p>
+            {% if user.phone %}
+            <p><i class="fas fa-phone"></i> {{ user.phone }}</p>
+            {% endif %}
+            {% if user.city %}
+            <p><i class="fas fa-city"></i> {{ user.city }}</p>
+            {% endif %}
+
+            <div class="user-actions">
+                <a href="{{ url_for('user_profile', user_id=user.id) }}" class="btn btn-small">
+                    <i class="fas fa-eye"></i> Профиль
+                </a>
+                <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-small btn-warning">
+                    <i class="fas fa-edit"></i> Редактировать
+                </a>
+                <form action="{{ url_for('delete_user', user_id=user.id) }}"
+                      method="POST"
+                      class="delete-form"
+                      onsubmit="return confirmDelete('{{ user.name }}')">
+                    <button type="submit" class="btn btn-small btn-danger">
+                        <i class="fas fa-trash"></i> Удалить
+                    </button>
+                </form>
+            </div>
+
+            {% if user.created_at %}
+            <div class="user-meta">
+                <small>Добавлен: {{ user.created_at }}</small>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="fas fa-user-slash fa-4x"></i>
+    <h2>Пользователи не найдены</h2>
+    <p>Добавьте первого пользователя!</p>
+    <a href="{{ url_for('add_user') }}" class="btn btn-success">
+        <i class="fas fa-user-plus"></i> Добавить пользователя
+    </a>
+</div>
+{% endif %}
+
+<h2><i class="fas fa-code"></i> Данные в JSON формате</h2>
+<div class="json-section">
+    <div class="json-header">
+        <button onclick="loadUsers()" class="btn">
+            <i class="fas fa-sync-alt"></i> Обновить данные
+        </button>
+        <button onclick="copyToClipboard()" class="btn btn-secondary">
+            <i class="fas fa-copy"></i> Копировать JSON
+        </button>
+    </div>
+    <pre id="json-output">Загрузка...</pre>
+</div>
+
+<script>
+function loadUsers() {
+    fetch('/api/users')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('json-output').textContent =
+                JSON.stringify(data, null, 2);
+        });
+}
+
+function exportUsers() {
+    const data = JSON.stringify(users, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'users_export.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function copyToClipboard() {
+    const text = document.getElementById('json-output').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        alert('JSON скопирован в буфер обмена!');
+    });
+}
+
+function confirmDelete(userName) {
+    return confirm(`Вы уверены, что хотите удалить пользователя "${userName}"?`);
+}
+
+// Загружаем данные при открытии страницы
+document.addEventListener('DOMContentLoaded', loadUsers);
+</script>
+{% endblock %}
