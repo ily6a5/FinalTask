@@ -1,1 +1,46 @@
+{% extends "base.html" %}
 
+{% block content %}
+<div class="hero">
+    <h1>Добро пожаловать в Flask приложение!</h1>
+    <p>Простое веб-приложение на Flask с несколькими страницами и функциями.</p>
+    <div class="buttons">
+        <a href="{{ url_for('users_list') }}" class="btn btn-primary">Смотреть пользователей</a>
+        <a href="{{ url_for('contact') }}" class="btn btn-secondary">Связаться с нами</a>
+    </div>
+</div>
+
+<div class="features">
+    <div class="feature">
+        <i class="fas fa-bolt"></i>
+        <h3>Быстро</h3>
+        <p>Flask - легковесный и быстрый фреймворк.</p>
+    </div>
+    <div class="feature">
+        <i class="fas fa-cogs"></i>
+        <h3>Просто</h3>
+        <p>Минималистичный и простой в изучении.</p>
+    </div>
+    <div class="feature">
+        <i class="fas fa-expand"></i>
+        <h3>Гибко</h3>
+        <p>Легко расширяется под ваши нужды.</p>
+    </div>
+</div>
+
+<div class="calculator">
+    <h2>Простой калькулятор (AJAX)</h2>
+    <div class="calc-form">
+        <input type="number" id="num1" placeholder="Число 1" value="10">
+        <select id="operation">
+            <option value="add">+</option>
+            <option value="subtract">-</option>
+            <option value="multiply">×</option>
+            <option value="divide">÷</option>
+        </select>
+        <input type="number" id="num2" placeholder="Число 2" value="5">
+        <button onclick="calculate()" class="btn">Рассчитать</button>
+    </div>
+    <div id="result" class="result-box"></div>
+</div>
+{% endblock %}
