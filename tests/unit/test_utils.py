@@ -11,6 +11,35 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 
 from app import load_users, save_users
 
+@pytest.fixture
+def mock_users():
+    return [
+        {
+            "id": 1,
+            "name": "Александр Петров",
+            "email": "alex@example.com",
+            "age": 28,
+            "phone": "+7 (911) 111-11-11",
+            "city": "Москва"
+        },
+        {
+            "id": 2,
+            "name": "Мария Иванова",
+            "email": "maria@example.com",
+            "age": 32,
+            "phone": "+7 (922) 222-22-22",
+            "city": "Казань"
+        },
+        {
+            "id": 3,
+            "name": "Иван Сидоров",
+            "email": "ivan@example.com",
+            "age": 45,
+            "phone": "+7 (933) 333-33-33",
+            "city": "Новосибирск"
+        }
+    ]
+
 
 class TestFileOperations:
 
