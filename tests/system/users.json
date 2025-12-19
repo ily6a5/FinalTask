@@ -1,0 +1,53 @@
+[
+  {
+    "id": 1,
+    "name": "Иван Иванов",
+    "email": "ivan@example.com",
+    "age": 25,
+    "phone": "+7 (999) 123-45-67",
+    "city": "Москва"
+  },
+  {
+    "id": 2,
+    "name": "Мария Петрова",
+    "email": "maria@example.com",
+    "age": 30,
+    "phone": "+7 (999) 234-56-78",
+    "city": "Санкт-Петербург"
+  },
+  {
+    "id": 3,
+    "name": "Алексей Сидоров",
+    "email": "alex@example.com",
+    "age": 22,
+    "phone": "+7 (999) 345-67-89",
+    "city": "Казань"
+  },
+  {
+    "id": 4,
+    "name": "Системный Тест",
+    "email": "system.test@example.com",
+    "age": 45,
+    "phone": "+7 (999) 123-45-67",
+    "city": "Системный Город",
+    "created_at": "2025-12-19 22:17:26"
+  },
+  {
+    "id": 5,
+    "name": "Пользователь 3",
+    "email": "user3@example.com",
+    "age": 23,
+    "phone": "",
+    "city": "Город 3",
+    "created_at": "2025-12-19 22:17:32"
+  },
+  {
+    "id": 6,
+    "name": "Пользователь 0",
+    "email": "user0@example.com",
+    "age": 20,
+    "phone": "",
+    "city": "Город 0",
+    "created_at": "2025-12-19 22:17:32"
+  }
+]
