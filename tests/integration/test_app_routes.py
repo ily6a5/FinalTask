@@ -1,15 +1,20 @@
 import pytest
 import json
-from app import app as flask_app
+
+@pytest.fixture
+def app():
+    from app import app as flask_app
+    flask_app.config.update({
+        "TESTING": True,
+        "SECRET_KEY": "test-secret-key",
+    })
+    return flask_app
+
 
 @pytest.fixture
 def client(app):
     return app.test_client()
 
-
-@pytest.fixture
-def runner(app):
-    return app.test_cli_runner()
 
 def test_home_page(client):
     response = client.get('/')
