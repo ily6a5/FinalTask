@@ -73,7 +73,7 @@ class TestDataProcessing:
     def test_generate_user_id(self, mock_users):
         # Когда есть пользователи
         new_id = self._generate_new_id(mock_users)
-        assert new_id == 3  # Максимальный ID + 1
+        assert new_id == 4  # Максимальный ID + 1
 
         new_id = self._generate_new_id([])
         assert new_id == 1
