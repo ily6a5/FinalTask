@@ -1,1 +1,88 @@
 
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h1><i class="fas fa-user-edit"></i> Редактировать пользователя: {{ user.name }}</h1>
+    
+    <div class="form-wrapper">
+        <form method="POST" action="{{ url_for('edit_user', user_id=user.id) }}" class="user-form">
+            <div class="form-group">
+                <label for="name"><i class="fas fa-user"></i> Полное имя *</label>
+                <input type="text" id="name" name="name" 
+                       value="{{ user.name }}"
+                       required
+                       placeholder="Введите имя и фамилию">
+            </div>
+            
+            <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email адрес *</label>
+                <input type="email" id="email" name="email"
+                       value="{{ user.email }}"
+                       required
+                       placeholder="example@mail.com">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age"><i class="fas fa-birthday-cake"></i> Возраст *</label>
+                    <input type="number" id="age" name="age"
+                           value="{{ user.age }}"
+                           min="1" max="150" required
+                           placeholder="25">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> Телефон</label>
+                    <input type="tel" id="phone" name="phone"
+                           value="{{ user.phone if user.phone else '' }}"
+                           placeholder="+7 (999) 123-45-67">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="city"><i class="fas fa-city"></i> Город</label>
+                <input type="text" id="city" name="city"
+                       value="{{ user.city if user.city else '' }}"
+                       placeholder="Москва">
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Сохранить изменения
+                </button>
+                <a href="{{ url_for('users_list') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Отмена
+                </a>
+                <a href="{{ url_for('user_profile', user_id=user.id) }}" class="btn">
+                    <i class="fas fa-eye"></i> Посмотреть профиль
+                </a>
+            </div>
+        </form>
+        
+        <div class="form-info">
+            <h3><i class="fas fa-history"></i> История изменений</h3>
+            <ul>
+                {% if user.created_at %}
+                <li><strong>Создан:</strong> {{ user.created_at }}</li>
+                {% endif %}
+                {% if user.updated_at %}
+                <li><strong>Обновлен:</strong> {{ user.updated_at }}</li>
+                {% endif %}
+            </ul>
+            
+            <div class="danger-zone">
+                <h4><i class="fas fa-exclamation-triangle"></i> Опасная зона</h4>
+                <p>Удаление пользователя невозможно отменить!</p>
+                <form action="{{ url_for('delete_user', user_id=user.id) }}" 
+                      method="POST" 
+                      onsubmit="return confirm('Вы уверены, что хотите удалить этого пользователя?')">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Удалить пользователя
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
